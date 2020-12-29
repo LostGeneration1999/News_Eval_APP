@@ -10,8 +10,6 @@ const LikeButton = () => {
 
     useEffect(() => {
         document.getElementById('counter').addEventListener('click', countUp);
-        console.log(limit)
-        console.log(count)
         if (count > 3) {
             counter(0)
         }

@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import Title from './Title'
+import Submit from './components/Submit'
 import './App.css';
 
 function App() {
@@ -8,9 +9,8 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <React.Fragment>
-          <Title />
-        </React.Fragment>
+        <h1>News Response Check</h1>
+        <Submit />
       </header>
     </div >
   );
