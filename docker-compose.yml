@@ -11,6 +11,8 @@ services:
       - ./server/:/var/www/server
     env_file:
       - .env
+    networks:
+      - fbnet
     tty: true
   node:
     image: node:latest
@@ -23,5 +25,10 @@ services:
     volumes:
       - ./server/:/var/www/server/
       - ./client/:/var/www/client/
+    networks:
+      - fbnet
     tty: true
 
+networks:
+    fbnet:
+        driver: bridge
