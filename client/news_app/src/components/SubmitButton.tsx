@@ -7,5 +7,4 @@ export const SubmitButton: React.FC = () => {
         </div>
     )
 }
-
 export default SubmitButton;
