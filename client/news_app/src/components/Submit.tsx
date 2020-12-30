@@ -10,7 +10,8 @@ export const Submit: React.FC = () => {
         Axios.post('http://0.0.0.0:5000/tags', {
             post_tags: tags
         }).then(function (res) {
-            alert(res.data.result)
+            console.log(res.data.result[25])
+            alert('OK')
         })
     }
 
