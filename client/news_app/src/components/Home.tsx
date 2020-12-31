@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
 import SubmitForm from './SubmitForm'
+import ArticleList from './ArticleList'
 import Axios from 'axios'
 
-export const Submit: React.FC = () => {
+
+export const Home: React.FC = () => {
 
     const [state, setState] = useState(['新聞'])
+    const [article, setArticle] = useState([{ title: '', links: '' }])
 
     const sendBack = (tags: string[]) => {
         Axios.post('http://0.0.0.0:5000/tags', {
             post_tags: tags
         }).then(function (res) {
-            console.log(res.data.result[25])
-            alert('OK')
+            setArticle(res.data.result)
         })
     }
 
@@ -34,8 +36,11 @@ export const Submit: React.FC = () => {
             <div>
                 <button onClick={submitFormSend}>送信</button>
             </div>
+            <div>
+                <ArticleList articles={article} />
+            </div>
         </>
     )
 }
 
-export default Submit;
+export default Home;

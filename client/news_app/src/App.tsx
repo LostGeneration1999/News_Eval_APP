@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
-import Title from './Title'
-import Submit from './components/Submit'
+import Home from './components/Home'
 import './App.css';
 
+
 function App() {
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <h1>News Response Check</h1>
-        <Submit />
+        <h1>Yahoo! News Response Check</h1>
+        <Home />
       </header>
     </div >
   );
