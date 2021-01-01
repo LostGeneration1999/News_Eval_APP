@@ -24,6 +24,7 @@ export const Home: React.FC = () => {
         if (state.length == 0) {
             alert('タグを入力してください');
         } else {
+
             sendBack(state)
         }
     }
