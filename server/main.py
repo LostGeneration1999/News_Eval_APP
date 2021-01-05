@@ -4,7 +4,7 @@ from flask_cors import CORS
 from bs4 import BeautifulSoup
 import urllib
 from urllib.parse import urlparse
-import selenium
+from selenium import webdriver
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
 
@@ -46,6 +46,75 @@ def preventEncode(url):
     '#' if p.fragment else '', p.fragment)
     return url
 
+def organizeComment(comment_boxes):
+
+    comments = []
+    names = []
+    dates = []
+    agrees = []
+    disagrees = []
+
+    for i,comment_box in enumerate(comment_boxes):
+        print('comment :%d'%i)
+        #コメント取得
+        elem_comment = comment_box.find_element_by_class_name("cmtBody")
+        comment = elem_comment.text.strip()
+        comments.append(comment)
+        
+        #ユーザー名取得
+        elem_name = comment_box.find_element_by_class_name("rapid-noclick-resp")
+        name = elem_name.text
+        names.append(name)
+                
+        #日付取得
+        elem_date = comment_box.find_element_by_class_name("date")
+        date = elem_date.text
+        dates.append(date) 
+        
+        #good数取得
+        agree_box = comment_box.find_element_by_class_name("good")
+        elem_agree = agree_box.find_element_by_class_name("userNum")
+        agree = elem_agree.text
+        agrees.append(agree)
+
+        #bad数取得
+        disagree_box = comment_box.find_element_by_class_name("bad")
+        elem_disagree = disagree_box.find_element_by_class_name("userNum")
+        disagree = elem_disagree.text
+        disagrees.append(disagree)
+    return {'comments': comments, 'agrees':agrees, 'disagrees': disagrees}
+
+def getComment(url):
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    driver = webdriver.Chrome(executable_path='/usr/local/bin/chromedriver',options=options)
+    comment_boxes  = []
+    start = 1
+    end = 3
+    
+    response = urllib.request.urlopen(url)
+    content = response.read().decode(response.headers.get_content_charset())
+    soup = BeautifulSoup(content, 'html.parser')
+    for meta_tag in soup.find_all('meta', attrs={'property': 'og:url'}):
+        url = meta_tag.get('content')
+    
+    for page in range(start, end):
+        url = "{}/comments?page={}&t=t&order=recommended".format(url,page)
+        #https://headlines.yahoo.co.jp/hl?a=20210105-00038732-hankyoreh-kr/comments?page=2&t=t&order=recommended
+        #https://news.yahoo.co.jp/articles/e9101e27163ecd32985909ef9fbe41b270cb4070/comments?page=2&t=t&order=recommended
+        print(page)
+        driver.get(url)
+        iframe = driver.find_element_by_class_name("news-comment-plguin-iframe")
+        driver.switch_to.frame(iframe)
+    comment_boxes = driver.find_elements_by_class_name("root")
+    data = organizeComment(comment_boxes)
+    print(data['comments'])
+    return data
+
+
+
 @app.after_request
 def after_request(response):
   response.headers.add('Access-Control-Allow-Origin', '*')
@@ -63,6 +132,15 @@ def parse():
     tags = data['post_tags']
     url = scraping(tags)
     response = {'result': url}
+    return make_response(jsonify(response))
+
+@app.route('/comment', methods=['GET', 'POST'])
+def comment():
+    data = request.get_json()
+    article = data['post_articleConent']
+    print(article['link'])
+    data = getComment(article['link'])
+    response = {'result': data}
     return make_response(jsonify(response))
 
 if __name__ == "__main__":

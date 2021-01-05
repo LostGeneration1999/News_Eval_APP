@@ -9,14 +9,24 @@ export const Home: React.FC = () => {
     const [state, setState] = useState(['新聞'])
     const [article, setArticle] = useState([{ title: '', links: '' }])
     const [content, setContent] = useState({ title: '', links: '' })
+    const [result, setResult] = useState([{ comments: '', agrees: '', disagrees: '' }])
 
     const sendBack = (tags: string[]) => {
         Axios.post('http://0.0.0.0:5000/tags', {
             post_tags: tags
         }).then(function (res) {
             setArticle(res.data.result)
-
         })
+    }
+
+    const commentBack = (articleContent: { title: string, links: string }) => {
+        if (articleContent.title != "" || articleContent.links != "") {
+            Axios.post('http://0.0.0.0:5000/comment', {
+                post_articleConent: articleContent
+            }).then(function (res) {
+                setResult(res.data.result)
+            })
+        }
     }
 
     const submitFormSend = (e: React.MouseEvent) => {
@@ -32,7 +42,12 @@ export const Home: React.FC = () => {
 
     useEffect(() => {
         console.log(content)
+        commentBack(content)
     }, [content])
+
+    useEffect(() => {
+        console.log(result)
+    }, [result])
 
     return (
         <>
