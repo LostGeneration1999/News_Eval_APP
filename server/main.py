@@ -20,16 +20,16 @@ def after_request(response):
 def index():
     return "Server OK"
 
-@app.route('/tags', methods=['GET', 'POST'])
+@app.route('/tags', methods=['POST'])
 def parse():
     scraping = sc.Scraping()
     data = request.get_json()
     tags = data['post_tags']
     url = scraping.scraping(tags)
-    response = {'result': url}
+    response = {'article': url}
     return make_response(jsonify(response))
 
-@app.route('/comment', methods=['GET', 'POST'])
+@app.route('/comment', methods=['POST'])
 def comment():
     scraping = sc.Scraping()
     data = request.get_json()
@@ -38,13 +38,14 @@ def comment():
     response = {'result': data}
     return make_response(jsonify(response))
 
-@app.route('/eval', methods=['GET', 'POST'])
+@app.route('/eval', methods=['POST'])
 def eval():
     evalComment = eva.Eval()
     data = request.get_json()
     comment = data['comment']
     c, a, d = comment['comments'], comment['agrees'], comment['disagrees']
     data = evalComment.evaluateComment(c,a,d)
+    print(data)
     response = {'response': data}
     return make_response(jsonify(response))
 

@@ -80,9 +80,9 @@ class Scraping():
         # https://naruport.com/blog/2019/12/27/bs4-href/
         links = soup.find_all('a', class_={'newsFeed_item_link'})
         links = list(map(lambda x: x.get('href'), links))
-
         for title, link in zip(titles, links):
-            self.articles.append({'title': title, 'link': link})
+            pid = link.split('/')[-1].split('=')[-1]
+            self.articles.append({'title': title, 'link': link, 'pid': pid})
         
         return self.articles
 

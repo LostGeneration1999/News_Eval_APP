@@ -6,19 +6,24 @@ import Axios from 'axios'
 
 export const Home: React.FC = () => {
 
+    // メイン画面の表示
     const [status, setStatus] = useState('タグを入力してください')
+    // 検索するタグ
     const [state, setState] = useState(['政治'])
-    const [article, setArticle] = useState([{ title: '', links: '' }])
-    const [content, setContent] = useState({ title: '', links: '' })
+    // 一覧表示する記事
+    const [article, setArticle] = useState([{ pid: '', title: '', links: '' }])
+    // コメント取得するする記事
+    const [content, setContent] = useState({ pid: 'initial', title: '', links: '' })
+    // 返り値として受け取るコメント結果
     const [result, setResult] = useState([{ comments: '', agrees: '', disagrees: '' }])
-    let negative = undefined
-    let positive = undefined
+    // ネガポジ判定の結果
+    const [response, setResponse] = useState({ negative: 0.0, positive: 0.0 })
 
     const sendBack = (tags: string[]) => {
         Axios.post('http://0.0.0.0:5000/tags', {
             post_tags: tags
         }).then(function (res) {
-            setArticle(res.data.result)
+            setArticle(res.data.article)
         })
     }
 
@@ -29,17 +34,22 @@ export const Home: React.FC = () => {
                 post_articleConent: articleContent
             }).then(function (res) {
                 setResult(res.data.result)
+                setStatus('ネガポジ判定ボタンを押してください')
             })
         }
     }
 
     const negaPosiEval = () => {
-        Axios.post('http://0.0.0.0:5000/eval', {
-            comment: result
-        }).then(function (res) {
-            negative = res.data.response['negative']
-            positive = res.data.response['positive']
-        })
+        if (content.title != "" || content.links != "") {
+            setStatus('ネガポジ判定中・・・')
+            Axios.post('http://0.0.0.0:5000/eval', {
+                comment: result
+            }).then(function (res) {
+                setResponse(res.data.response)
+            })
+        } else {
+            alert('記事を選択してください')
+        }
     }
 
     const submitFormSend = (e: React.MouseEvent) => {
@@ -54,19 +64,20 @@ export const Home: React.FC = () => {
         }
     }
 
+    // 記事選択完了
     useEffect(() => {
         commentBack(content)
     }, [content])
 
     useEffect(() => {
-        setStatus('ネガポジ判定ボタンを押してください')
-    }, [result])
+        setStatus('記事を選択してください')
+    }, [response])
 
     return (
         <>
             <h1>{status}</h1>
             <h3>選択記事：「{content.title}」</h3>
-            <h4>negative: {negative} | positive: {positive}</h4>
+            <h4>negative: {response.negative} | positive: {response.positive}</h4>
             <form>
                 <SubmitForm tag={state} setValue={setState} />
             </form>

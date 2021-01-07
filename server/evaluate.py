@@ -18,5 +18,5 @@ class Eval():
             self.evaluate.append(sum(result))
         for i in range(len(commentsList)):
             self.sum_posi += self.evaluate[i]*int(positiveList[i])
-            self.sum_posi += self.evaluate[i]*int(negativeList[i])
+            self.sum_nega += self.evaluate[i]*int(negativeList[i])
         return {'positive': self.sum_posi, 'negative': self.sum_nega}
