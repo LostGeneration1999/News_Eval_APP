@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import SubmitForm from './SubmitForm'
 import ArticleList from './ArticleList'
 import Axios from 'axios'
+import Button from '@material-ui/core/Button'
 
 
 export const Home: React.FC = () => {
@@ -78,14 +79,15 @@ export const Home: React.FC = () => {
             <h1>{status}</h1>
             <h3>選択記事：「{content.title}」</h3>
             <h4>negative: {response.negative} | positive: {response.positive}</h4>
-            <form>
-                <SubmitForm tag={state} setValue={setState} />
-            </form>
             <div>
-                <button onClick={submitFormSend}>記事検索</button>
+                <form>
+                    <SubmitForm tag={state} setValue={setState} />
+                    <Button onClick={submitFormSend} variant="contained" color="primary">記事検索</Button>
+                </form>
             </div>
+
             <div>
-                <button onClick={negaPosiEval}>ネガポジ判定</button>
+                <Button onClick={negaPosiEval} variant="contained" color="primary">ネガポジ判定</Button>
             </div>
             <div>
                 <ArticleList articles={article} setContent={setContent} />

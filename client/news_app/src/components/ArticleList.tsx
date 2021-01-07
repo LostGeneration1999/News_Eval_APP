@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-
+import MaterialTable from 'material-table';
 
 interface ArticlesProps {
     articles:
@@ -17,8 +17,12 @@ interface ArticlesProps {
 
 export const Articles: React.FC<ArticlesProps> = ({ articles, setContent }) => {
 
-    const pushButton = (v: number) => {
-        setContent(articles[v])
+    const pushButton = (articles: {
+        pid: string;
+        title: string;
+        links: string;
+    }) => {
+        setContent(articles)
     }
 
     function checkLink(link: string): boolean {
@@ -32,20 +36,26 @@ export const Articles: React.FC<ArticlesProps> = ({ articles, setContent }) => {
 
     return (
         <React.Fragment>
-            {articles.map((article, index) =>
-            (
-                <div>
-                    {checkLink(article.links)
-                        ? (
-                            <p onClick={() => pushButton(index)} key={article.pid}>
-                                {index + 1}　：　{article.title}
-                            </p>
-                        ) : (
-                            <p key={index}>記事を検索してください</p>
-                        )}
-
-                </div>
-            ))}
+            {/* {checkLink(articles[0].links)( */}
+            < MaterialTable
+                columns={[
+                    { title: '記事タイトル', field: 'title' },
+                ]}
+                data={articles}
+                options={{
+                    showTitle: false,
+                }}
+                actions={[
+                    {
+                        icon: 'done',
+                        tooltip: 'Edit Item',
+                        // any型は良くない
+                        onClick: (_: any, rowData: any): void =>
+                            pushButton(rowData),
+                    },
+                ]}
+            />
+            {/* )} */}
         </React.Fragment>
     )
 
