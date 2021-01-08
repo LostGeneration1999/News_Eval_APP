@@ -34,9 +34,11 @@ export const Home: React.FC = () => {
             Axios.post('http://0.0.0.0:5000/comment', {
                 post_articleConent: articleContent
             }).then(function (res) {
-                setResult(res.data.result)
                 setStatus('ネガポジ判定ボタンを押してください')
-            })
+                setResult(res.data.result)
+            }).catch(err => {
+                alert('記事にコメント欄が存在しない、もしくはリロードしてもう一度お試しください。')
+            });
         }
     }
 

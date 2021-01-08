@@ -25,33 +25,32 @@ def organizeComment(comment_boxes):
     disagrees = []
 
     for i,comment_box in enumerate(comment_boxes):
-        print('comment :%d'%i)
         #コメント取得
         elem_comment = comment_box.find_element_by_class_name("cmtBody")
         comment = elem_comment.text.strip()
         comments.append(comment)
-        
-        #ユーザー名取得
-        elem_name = comment_box.find_element_by_class_name("rapid-noclick-resp")
-        name = elem_name.text
-        names.append(name)
-                
-        #日付取得
-        elem_date = comment_box.find_element_by_class_name("date")
-        date = elem_date.text
-        dates.append(date) 
+        print(comment)
+        print(len(comments))
         
         #good数取得
         agree_box = comment_box.find_element_by_class_name("good")
         elem_agree = agree_box.find_element_by_class_name("userNum")
-        agree = elem_agree.text
+        if(elem_agree.text):
+            agree = elem_agree.text
+        else:
+            agree = 0
         agrees.append(agree)
 
         #bad数取得
         disagree_box = comment_box.find_element_by_class_name("bad")
         elem_disagree = disagree_box.find_element_by_class_name("userNum")
-        disagree = elem_disagree.text
+        if(elem_disagree.text):
+            disagree = elem_disagree.text
+        else:
+            disagree = 0 
         disagrees.append(disagree)
+
+    print({'comments': comments, 'agrees':agrees, 'disagrees': disagrees})
     return {'comments': comments, 'agrees':agrees, 'disagrees': disagrees}
 
 
@@ -61,7 +60,7 @@ class Scraping():
         self.articles = []
         self.comment_boxes = []
         self.start = 1
-        self.end = 3
+        self.end = 2
 
     # 記事一覧取得
     def scraping(self, tags):
@@ -77,7 +76,6 @@ class Scraping():
         titles = list(map(lambda x: x.text, titles))
 
         # リンク取得
-        # https://naruport.com/blog/2019/12/27/bs4-href/
         links = soup.find_all('a', class_={'newsFeed_item_link'})
         links = list(map(lambda x: x.get('href'), links))
         for title, link in zip(titles, links):
@@ -95,7 +93,7 @@ class Scraping():
         options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome(executable_path='/usr/local/bin/chromedriver',options=options)
         self.comment_boxes  = []
-        
+        print(url)
         response = urllib.request.urlopen(url)
         content = response.read().decode(response.headers.get_content_charset())
         soup = BeautifulSoup(content, 'html.parser')
@@ -104,14 +102,9 @@ class Scraping():
         
         for page in range(self.start, self.end):
             url = "{}/comments?page={}&t=t&order=recommended".format(url,page)
-            print(page)
             driver.get(url)
             iframe = driver.find_element_by_class_name("news-comment-plguin-iframe")
             driver.switch_to.frame(iframe)
         self.comment_boxes = driver.find_elements_by_class_name("root")
         data = organizeComment(self.comment_boxes)
-        print(data['comments'])
         return data
-
-
-    

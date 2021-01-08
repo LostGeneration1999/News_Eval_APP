@@ -36,7 +36,6 @@ export const Articles: React.FC<ArticlesProps> = ({ articles, setContent }) => {
 
     return (
         <React.Fragment>
-            {/* {checkLink(articles[0].links)( */}
             < MaterialTable
                 columns={[
                     { title: '記事タイトル', field: 'title' },
@@ -55,7 +54,6 @@ export const Articles: React.FC<ArticlesProps> = ({ articles, setContent }) => {
                     },
                 ]}
             />
-            {/* )} */}
         </React.Fragment>
     )
 
