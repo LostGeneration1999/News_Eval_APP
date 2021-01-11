@@ -21,7 +21,7 @@ export const Home: React.FC = () => {
     const [response, setResponse] = useState({ negative: 0.0, positive: 0.0 })
 
     const sendBack = (tags: string[]) => {
-        Axios.post('http://0.0.0.0:5000/tags', {
+        Axios.post('http://0.0.0.0:5000/api/tags', {
             post_tags: tags
         }).then(function (res) {
             setArticle(res.data.article)
@@ -31,7 +31,7 @@ export const Home: React.FC = () => {
     const commentBack = (articleContent: { title: string, links: string }) => {
         if (articleContent.title != "" || articleContent.links != "") {
             setStatus('コメント取得中・・・')
-            Axios.post('http://0.0.0.0:5000/comment', {
+            Axios.post('http://0.0.0.0:5000/api/comment', {
                 post_articleConent: articleContent
             }).then(function (res) {
                 setStatus('ネガポジ判定ボタンを押してください')
@@ -45,7 +45,7 @@ export const Home: React.FC = () => {
     const negaPosiEval = () => {
         if (content.title != "" || content.links != "") {
             setStatus('ネガポジ判定中・・・')
-            Axios.post('http://0.0.0.0:5000/eval', {
+            Axios.post('http://0.0.0.0:5000/api/eval', {
                 comment: result
             }).then(function (res) {
                 setResponse(res.data.response)

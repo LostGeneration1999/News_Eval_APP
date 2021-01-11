@@ -18,11 +18,8 @@ def after_request(response):
   response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
   return response
 
-@app.route("/", methods=['GET'])
-def index():
-    return "Server OK"
 
-@app.route('/tags', methods=['POST'])
+@app.route('/api/tags', methods=['POST'])
 def parse():
     scraping = sc.Scraping()
     data = request.get_json()
@@ -38,7 +35,7 @@ def scraping(article):
     data = scraping.getComment(article['link'])
     return data
     
-@app.route('/comment', methods=['POST'])
+@app.route('/api/comment', methods=['POST'])
 def comment():
     data = request.get_json()
     article = data['post_articleConent']
@@ -51,7 +48,7 @@ def comment():
     except Exception as e:
         return jsonify(message='Comment Error'),500
 
-@app.route('/eval', methods=['POST'])
+@app.route('/api/eval', methods=['POST'])
 def eval():
     evalComment = eva.Eval()
     data = request.get_json()

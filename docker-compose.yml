@@ -15,16 +15,16 @@ services:
       - fbnet
     tty: true
   node:
-    image: node:latest
+    build: ./client/
     container_name: node-clients
     working_dir: /var/www/client/
     ports:
       - 3000:3000
     env_file:
       - .env
-    volumes:
-      - ./server/:/var/www/server/
-      - ./client/:/var/www/client/
+    #volumes:
+    #  - ./server/:/var/www/server/
+    #  - ./client/:/var/www/client/
     networks:
       - fbnet
     tty: true

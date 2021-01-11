@@ -50,7 +50,6 @@ def organizeComment(comment_boxes):
             disagree = 0 
         disagrees.append(disagree)
 
-    # print({'comments': comments, 'agrees':agrees, 'disagrees': disagrees})
     return {'comments': comments, 'agrees':agrees, 'disagrees': disagrees}
 
 
