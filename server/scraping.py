@@ -50,7 +50,7 @@ def organizeComment(comment_boxes):
             disagree = 0 
         disagrees.append(disagree)
 
-    print({'comments': comments, 'agrees':agrees, 'disagrees': disagrees})
+    # print({'comments': comments, 'agrees':agrees, 'disagrees': disagrees})
     return {'comments': comments, 'agrees':agrees, 'disagrees': disagrees}
 
 
@@ -93,7 +93,6 @@ class Scraping():
         options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome(executable_path='/usr/local/bin/chromedriver',options=options)
         self.comment_boxes  = []
-        print(url)
         response = urllib.request.urlopen(url)
         content = response.read().decode(response.headers.get_content_charset())
         soup = BeautifulSoup(content, 'html.parser')

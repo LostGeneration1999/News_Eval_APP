@@ -47,10 +47,8 @@ def comment():
         response = {'result': comments}
         return make_response(jsonify(response))
     except TimeoutError as e:
-        print(e)
         return jsonify(message='Comment Error'),500
     except Exception as e:
-        print(e)
         return jsonify(message='Comment Error'),500
 
 @app.route('/eval', methods=['POST'])
@@ -58,10 +56,8 @@ def eval():
     evalComment = eva.Eval()
     data = request.get_json()
     comment = data['comment']
-    print(comment)
     c, a, d = comment['comments'], comment['agrees'], comment['disagrees']
     data = evalComment.evaluateComment(c,a,d)
-    print(data)
     response = {'response': data}
     return make_response(jsonify(response))
 
