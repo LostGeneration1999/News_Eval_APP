@@ -18,6 +18,9 @@ def after_request(response):
   response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
   return response
 
+@app.route('/api', methods=['GET'])
+def main():
+    return "Hello World!"
 
 @app.route('/api/tags', methods=['POST'])
 def parse():

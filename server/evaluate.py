@@ -14,8 +14,6 @@ class Eval():
         for comment in commentsList:
             comment = comment.replace('\t', '')
             result = self.analyzer.analyze(comment)
-            # print(comment)
-            # print(result)
             self.evaluate.append(sum(result))
         for i in range(len(commentsList)):
             self.sum_posi += self.evaluate[i]*int(positiveList[i])

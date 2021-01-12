@@ -14,6 +14,8 @@ services:
     networks:
       - fbnet
     tty: true
+    privileged: true
+    command: /sbin/init  
   node:
     build: ./client/
     container_name: node-clients

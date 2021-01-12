@@ -24,4 +24,3 @@ RUN apt install -y mecab-jumandic-utf8 libmecab-dev file curl
 ADD ./requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
 
-#CMD  ["python", "main.py"]
