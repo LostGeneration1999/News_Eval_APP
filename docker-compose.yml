@@ -30,6 +30,7 @@ services:
     networks:
       - fbnet
     tty: true
+    privileged: true
 
 networks:
     fbnet:
